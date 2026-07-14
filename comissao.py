@@ -186,12 +186,12 @@ with tab3:
     #### 📌 Pergunta 1: Volume de vendas de cada consultor e valor de comissão para pagamento.
     Com base nas regras de elegibilidade, metas de atingimento (piso e regras de abatimento/adição de produtos especiais) e matriz de comissionamento por faixa, os valores finais apurados são:
 
-    | Consultor | Total de Vendas Realizadas | Valor P/ Meta Atingido | Faixa de Comissão | **Comissão a Pagar (R$)** |
+    | Consultor | Total de Vendas Realizadas | Valor P/ Meta Atingido | Faixa de Comissão | **Comissão a Pagar (R\$)** |
     | :--- | :---: | :---: | :---: | :---: |
-    | **CONSULTOR 1** | R$ 2.964,76 | R$ 2.964,76 | **Faixa 2** (R$ 2k a R$ 4k) | **R$ 2.973,75** |
-    | **CONSULTOR 2** | R$ 4.063,73 | R$ 4.063,73 | **Faixa 3** (>= R$ 4k) | **R$ 6.270,60** |
-    | **CONSULTOR 3** | R$ 1.374,92 | R$ 1.374,92 | **Faixa 1** (< R$ 2k) | **R$ 0,00** |
-    | **TOTAL GERAL** | **R$ 8.403,41** | **R$ 8.403,41** | - | **R$ 9.244,35** |
+    | **CONSULTOR 1** | R\$ 2.964,76 | R\$ 2.964,76 | **Faixa 2** (R\$ 2.000,00 a R\$ 3.999,99) | **R\$ 2.973,75** |
+    | **CONSULTOR 2** | R\$ 4.063,73 | R\$ 4.063,73 | **Faixa 3** (>= R\$ 4.000,00) | **R\$ 6.270,60** |
+    | **CONSULTOR 3** | R\$ 1.374,92 | R\$ 1.374,92 | **Faixa 1** (< R\$ 2.000,00) | **R\$ 0,00** |
+    | **TOTAL GERAL** | **R\$ 8.403,41** | **R\$ 8.403,41** | - | **R\$ 9.244,35** |
 
     * **Análise de Performance:** O **Consultor 2** obteve comissão superior ao seu próprio faturamento bruto total de vendas. Isso ocorre de forma legítima, pois na **Faixa 3**, categorias de alto valor agregado (como *Alta Voz - Base* e *Alta Voz - Fresh*) possuem taxas de comissão de **150%** e **200%** respectivamente, alavancando a remuneração por superação de metas.
 
