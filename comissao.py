@@ -219,13 +219,13 @@ with tab3:
     st.write("### Respostas do Estudo de Caso")
 
     st.markdown(f"""
-    #### 📌 Pergunta 1: Volume de vendas de cada consultor e valor de comissão para pagamento.
-    Com base nas regras de elegibilidade, metas de atingimento (piso e regras de abatimento/adição de produtos especiais) e matriz de comissionamento por faixa, os valores finais apurados são:
+#### 📌 Pergunta 1: Volume de vendas de cada consultor e valor de comissão para pagamento.
+Com base nas regras de elegibilidade, metas de atingimento (piso e regras de abatimento/adição de produtos especiais) e matriz de comissionamento por faixa, os valores finais apurados são:
 
-    | Consultor | Faturamento Bruto Real | Valor P/ Meta Atingido | Faixa de Comissão | **Comissão a Pagar (R$)** |
-    | :--- | :---: | :---: | :---: | :---: |
-    {linhas_tabela}| **TOTAL GERAL** | **{fmt_brl(total_fat)}** | **{fmt_brl(total_meta)}** | - | **{fmt_brl(total_com)}** |
-    """)
+| Consultor | Faturamento Bruto Real | Valor P/ Meta Atingido | Faixa de Comissão | **Comissão a Pagar (R$)** |
+| :--- | :---: | :---: | :---: | :---: |
+{linhas_tabela}| **TOTAL GERAL** | **{fmt_brl(total_fat)}** | **{fmt_brl(total_meta)}** | - | **{fmt_brl(total_com)}** |
+""")
 
     for _, row in destaques.iterrows():
         st.markdown(
@@ -237,31 +237,31 @@ with tab3:
         )
 
     st.markdown("""
-    ---
+---
 
-    #### 📌 Pergunta 2: Segunda visualização além do arquivo tradicional.
-    * A segunda visualização do projeto foi desenvolvida em ambiente de código utilizando **Python, Pandas, Plotly e Streamlit**, criando este Web Application interativo.
-    * A escolha tecnológica visa substituir os relatórios estáticos por uma ferramenta em que a liderança pode filtrar, ordenar e tomar decisões dinâmicas sobre os dados em tempo real.
+#### 📌 Pergunta 2: Segunda visualização além do arquivo tradicional.
+* A segunda visualização do projeto foi desenvolvida em ambiente de código utilizando **Python, Pandas, Plotly e Streamlit**, criando este Web Application interativo.
+* A escolha tecnológica visa substituir os relatórios estáticos por uma ferramenta em que a liderança pode filtrar, ordenar e tomar decisões dinâmicas sobre os dados em tempo real.
 
-    ---
+---
 
-    #### 📌 Pergunta 3: Sugestões de melhorias de processo para prevenção de erros (Foco em Excel e Python).
-    Para garantir a segurança e a integridade de ponta a ponta, propomos barreiras em duas frentes distintas:
+#### 📌 Pergunta 3: Sugestões de melhorias de processo para prevenção de erros (Foco em Excel e Python).
+Para garantir a segurança e a integridade de ponta a ponta, propomos barreiras em duas frentes distintas:
 
-    ##### A. Segurança de Entrada (No Excel)
-    1. **Validação de Dados na Origem:** Aplicação de listas suspensas (*Data Validation*) no Excel para as colunas de categorias e consultores. Isso previne que o usuário digite dados com erros gramaticais ou espaçamentos diferentes.
-    2. **Proteção de Abas:** Ocultar e proteger a aba de "Matriz de Comissão" por meio de senha de administrador, para que regras de pagamentos não sejam editadas acidentalmente.
+##### A. Segurança de Entrada (No Excel)
+1. **Validação de Dados na Origem:** Aplicação de listas suspensas (*Data Validation*) no Excel para as colunas de categorias e consultores. Isso previne que o usuário digite dados com erros gramaticais ou espaçamentos diferentes.
+2. **Proteção de Abas:** Ocultar e proteger a aba de "Matriz de Comissão" por meio de senha de administrador, para que regras de pagamentos não sejam editadas acidentalmente.
 
-    ##### B. Auditoria Programática e Higienização de Dados (No Python)
-    Neste projeto, criamos uma rotina de **Auditoria Automatizada via Python (Data Quality)**. O sistema faz uma varredura nas planilhas faturadas de forma instantânea antes de processar qualquer conta. Ele executa:
-    * **Limpeza e Higienização de Strings (Sanitização):** O código aplica funções automáticas do pandas para remover espaços em branco invisíveis (no início ou fim das células) e alinhar os nomes dos produtos. Isso impede que erros comuns no Excel quebrem o cálculo das comissões.
-    * **Testes de Schema:** O código alerta imediatamente se a planilha contiver valores de venda negativos, nomes em branco ou se alguma nova venda contiver uma categoria que não foi previamente catalogada no modelo de remuneração da empresa. Qualquer anomalia é reportada em tempo real na barra lateral **"Central de Governança"** deste Dashboard.
+##### B. Auditoria Programática e Higienização de Dados (No Python)
+Neste projeto, criamos uma rotina de **Auditoria Automatizada via Python (Data Quality)**. O sistema faz uma varredura nas planilhas faturadas de forma instantânea antes de processar qualquer conta. Ele executa:
+* **Limpeza e Higienização de Strings (Sanitização):** O código aplica funções automáticas do pandas para remover espaços em branco invisíveis (no início ou fim das células) e alinhar os nomes dos produtos. Isso impede que erros comuns no Excel quebrem o cálculo das comissões.
+* **Testes de Schema:** O código alerta imediatamente se a planilha contiver valores de venda negativos, nomes em branco ou se alguma nova venda contiver uma categoria que não foi previamente catalogada no modelo de remuneração da empresa. Qualquer anomalia é reportada em tempo real na barra lateral **"Central de Governança"** deste Dashboard.
 
-    ---
+---
 
-    #### 📌 Pergunta 4: Proposta de automação do processo.
-    Atualmente, o processo de calcular comissões exige retrabalho manual mensal. Propomos a seguinte arquitetura de automação moderna:
-    * **Implementação de um pipeline de ETL com Power Query ou Python (Pandas):**
-      * Em vez de montar fórmulas complexas no Excel manualmente a cada ciclo, as regras de negócios (fórmulas condicionais de meta e as taxas de comissão) são codificadas uma única vez no motor de faturamento em Python.
-      * O analista operacional apenas faz o upload da listagem bruta de vendas do sistema de faturamento, e o pipeline realiza a higienização, cruzamento de dados e cálculo das comissões em segundos, reduzindo o tempo de processamento em até **95%** e eliminando o fator de erro humano.
-    """)
+#### 📌 Pergunta 4: Proposta de automação do processo.
+Atualmente, o processo de calcular comissões exige retrabalho manual mensal. Propomos a seguinte arquitetura de automação moderna:
+* **Implementação de um pipeline de ETL com Power Query ou Python (Pandas):**
+  * Em vez de montar fórmulas complexas no Excel manualmente a cada ciclo, as regras de negócios (fórmulas condicionais de meta e as taxas de comissão) são codificadas uma única vez no motor de faturamento em Python.
+  * O analista operacional apenas faz o upload da listagem bruta de vendas do sistema de faturamento, e o pipeline realiza a higienização, cruzamento de dados e cálculo das comissões em segundos, reduzindo o tempo de processamento em até **95%** e eliminando o fator de erro humano.
+""")
