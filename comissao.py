@@ -106,15 +106,15 @@ st.markdown("---")
 # Resumo consolidado por consultor (usado na Pergunta 1 do case)
 # =====================================================================
 def fmt_brl(valor):
-    return f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    return f"R\\$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 def descricao_faixa(f):
     if f == 1:
-        return "Faixa 1 (< R$ 2.000,00)"
+        return "Faixa 1 (< R\\$ 2.000,00)"
     elif f == 2:
-        return "Faixa 2 (R$ 2.000,00 a R$ 3.999,99)"
+        return "Faixa 2 (R\\$ 2.000,00 a R\\$ 3.999,99)"
     else:
-        return "Faixa 3 (>= R$ 4.000,00)"
+        return "Faixa 3 (>= R\\$ 4.000,00)"
 
 df_resumo = df.groupby("CONSULTOR").agg(
     Faturamento_Bruto=("valor total", "sum"),
