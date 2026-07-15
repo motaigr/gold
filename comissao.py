@@ -102,12 +102,48 @@ with col_kpi3:
 
 st.markdown("---")
 
+# =====================================================================
+# Resumo consolidado por consultor (usado na Pergunta 1 do case)
+# =====================================================================
+def fmt_brl(valor):
+    return f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+def descricao_faixa(f):
+    if f == 1:
+        return "Faixa 1 (< R$ 2.000,00)"
+    elif f == 2:
+        return "Faixa 2 (R$ 2.000,00 a R$ 3.999,99)"
+    else:
+        return "Faixa 3 (>= R$ 4.000,00)"
+
+df_resumo = df.groupby("CONSULTOR").agg(
+    Faturamento_Bruto=("valor total", "sum"),
+    Valor_Para_Meta=("Valor para Meta", "sum"),
+    Faixa=("faixa consultor", "first"),
+    Comissao=("comissão", "sum")
+).reset_index()
+
+linhas_tabela = ""
+for _, row in df_resumo.iterrows():
+    linhas_tabela += (
+        f"| **{row['CONSULTOR']}** | {fmt_brl(row['Faturamento_Bruto'])} | "
+        f"{fmt_brl(row['Valor_Para_Meta'])} | {descricao_faixa(row['Faixa'])} | "
+        f"**{fmt_brl(row['Comissao'])}** |\n"
+    )
+
+total_fat = df_resumo["Faturamento_Bruto"].sum()
+total_meta = df_resumo["Valor_Para_Meta"].sum()
+total_com = df_resumo["Comissao"].sum()
+
+# Identifica automaticamente consultores com comissão > faturamento bruto
+destaques = df_resumo[df_resumo["Comissao"] > df_resumo["Faturamento_Bruto"]]
+
 # 4. Navegação por Abas (Sem interferência de CSS externo)
 tab1, tab2, tab3 = st.tabs(["👥 Performance de Vendas", "📦 Análise de Produtos", "📝 Respostas do Estudo de Caso"])
 
 with tab1:
     st.write("### Desempenho por Consultor")
-    
+
     # Agrupamento dinâmico via pandas
     df_consultores = df.groupby("CONSULTOR").agg(
         Total_Faturamento=("valor total", "sum"),
@@ -120,9 +156,9 @@ with tab1:
     df_exibicao["Total_Faturamento"] = df_exibicao["Total_Faturamento"].map("R$ {:.2f}".format)
     df_exibicao["Total_Meta_Atingida"] = df_exibicao["Total_Meta_Atingida"].map("R$ {:.2f}".format)
     df_exibicao["Total_Comissao"] = df_exibicao["Total_Comissao"].map("R$ {:.2f}".format)
-    
+
     col_tabela, col_grafico = st.columns([1, 1.8])
-    
+
     with col_tabela:
         st.write("**Tabela de Resultados**")
         st.dataframe(df_exibicao, hide_index=True, use_container_width=True)
@@ -143,7 +179,7 @@ with tab1:
 
 with tab2:
     st.write("### Análise por Categoria de Produto")
-    
+
     df_categoria = df.groupby("CATEGORIA DO PRODUTO").agg(
         Quantidade=("QUANTIDADE", "sum"),
         Faturamento=("valor total", "sum")
@@ -162,7 +198,7 @@ with tab2:
             text_auto=True,
             template="plotly_dark"
         )
-        fig_qtd.update_layout(yaxis={'categoryorder':'total ascending'}, yaxis_title=None)
+        fig_qtd.update_layout(yaxis={'categoryorder': 'total ascending'}, yaxis_title=None)
         st.plotly_chart(fig_qtd, use_container_width=True)
 
     with col_prod2:
@@ -176,25 +212,31 @@ with tab2:
             text_auto='.3s',
             template="plotly_dark"
         )
-        fig_fat.update_layout(yaxis={'categoryorder':'total ascending'}, yaxis_title=None)
+        fig_fat.update_layout(yaxis={'categoryorder': 'total ascending'}, yaxis_title=None)
         st.plotly_chart(fig_fat, use_container_width=True)
 
 with tab3:
     st.write("### Respostas do Estudo de Caso")
-    
-    st.markdown("""
+
+    st.markdown(f"""
     #### 📌 Pergunta 1: Volume de vendas de cada consultor e valor de comissão para pagamento.
     Com base nas regras de elegibilidade, metas de atingimento (piso e regras de abatimento/adição de produtos especiais) e matriz de comissionamento por faixa, os valores finais apurados são:
 
-    | Consultor | Total de Vendas Realizadas | Valor P/ Meta Atingido | Faixa de Comissão | **Comissão a Pagar (R\$)** |
+    | Consultor | Faturamento Bruto Real | Valor P/ Meta Atingido | Faixa de Comissão | **Comissão a Pagar (R$)** |
     | :--- | :---: | :---: | :---: | :---: |
-    | **CONSULTOR 1** | R\$ 2.964,76 | R\$ 2.964,76 | **Faixa 2** (R\$ 2.000,00 a R\$ 3.999,99) | **R\$ 2.973,75** |
-    | **CONSULTOR 2** | R\$ 4.063,73 | R\$ 4.063,73 | **Faixa 3** (>= R\$ 4.000,00) | **R\$ 6.270,60** |
-    | **CONSULTOR 3** | R\$ 1.374,92 | R\$ 1.374,92 | **Faixa 1** (< R\$ 2.000,00) | **R\$ 0,00** |
-    | **TOTAL GERAL** | **R\$ 8.403,41** | **R\$ 8.403,41** | - | **R\$ 9.244,35** |
+    {linhas_tabela}| **TOTAL GERAL** | **{fmt_brl(total_fat)}** | **{fmt_brl(total_meta)}** | - | **{fmt_brl(total_com)}** |
+    """)
 
-    * **Análise de Performance:** O **Consultor 2** obteve comissão superior ao seu próprio faturamento bruto total de vendas. Isso ocorre de forma legítima, pois na **Faixa 3**, categorias de alto valor agregado (como *Alta Voz - Base* e *Alta Voz - Fresh*) possuem taxas de comissão de **150%** e **200%** respectivamente, alavancando a remuneração por superação de metas.
+    for _, row in destaques.iterrows():
+        st.markdown(
+            f"* **Análise de Performance:** O **{row['CONSULTOR']}** obteve comissão "
+            f"({fmt_brl(row['Comissao'])}) superior ao seu próprio faturamento bruto total de vendas "
+            f"({fmt_brl(row['Faturamento_Bruto'])}). Isso ocorre de forma legítima, pois na "
+            f"{descricao_faixa(row['Faixa'])}, categorias de alto valor agregado possuem taxas de "
+            f"comissão superiores a 100%, alavancando a remuneração por superação de metas."
+        )
 
+    st.markdown("""
     ---
 
     #### 📌 Pergunta 2: Segunda visualização além do arquivo tradicional.
@@ -219,7 +261,7 @@ with tab3:
 
     #### 📌 Pergunta 4: Proposta de automação do processo.
     Atualmente, o processo de calcular comissões exige retrabalho manual mensal. Propomos a seguinte arquitetura de automação moderna:
-    * **Implementação de um pipeline de ETL com Power Query ou Python (Pandas):** 
+    * **Implementação de um pipeline de ETL com Power Query ou Python (Pandas):**
       * Em vez de montar fórmulas complexas no Excel manualmente a cada ciclo, as regras de negócios (fórmulas condicionais de meta e as taxas de comissão) são codificadas uma única vez no motor de faturamento em Python.
       * O analista operacional apenas faz o upload da listagem bruta de vendas do sistema de faturamento, e o pipeline realiza a higienização, cruzamento de dados e cálculo das comissões em segundos, reduzindo o tempo de processamento em até **95%** e eliminando o fator de erro humano.
     """)
